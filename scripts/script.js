@@ -1,71 +1,47 @@
-var compare = function(choice1, choice2) {
-    if (choice1 === choice2) {
-        return "The result is a tie!";
-    } else if (choice1 === "rock"){
-        if (choice2 === "scissors") {
-        	return "rock wins";
-        } else if (choice2 === "rope") {
-        	return "rope wins";	
-        } else {
-          return "paper wins";
+function StaffMember(name,discountPercent){
+    this.name = name;
+    this.discountPercent = discountPercent;
+}
+
+var sally = new StaffMember("Sally",5);
+var bob = new StaffMember("Bob",10);
+
+// Create yourself again as 'me' with a staff discount of 20%
+var me = new StaffMember("Shaun Dashjian", 20);
+
+var cashRegister = {
+    total:0,
+    lastTransactionAmount: 0,
+    add: function(itemCost){
+        this.total += (itemCost || 0);
+        this.lastTransactionAmount = itemCost;
+    },
+    scan: function(item,quantity){
+        switch (item){
+        case "eggs": this.add(0.98 * quantity); break;
+        case "milk": this.add(1.23 * quantity); break;
+        case "magazine": this.add(4.99 * quantity); break;
+        case "chocolate": this.add(0.45 * quantity); break;
         }
-    } else if (choice1 === "paper") {
-        if (choice2 === "rock") {
-            return "paper wins";
-        } else if (choice2 === "rope"){
-        	return "paper wins";
-        } else {
-            return "scissors wins";
-        }
-    } else if (choice1 === "scissors") {
-        if (choice2 === "paper") {
-            return "scissors wins";
-        } else if (choice2 === "rope"){
-        	return "scissors wins";
-        } else {
-            return "rock wins";
-        }
-    } else if (choice1 === "rope") {
-    	if (choice2 === "rock") {
-    		return "rope wins";
-    	} else if (choice2 ==="paper") {
-    		return "paper wins";
-    	} else {
-    		return "scissors wins";
-    	}
+        return true;
+    },
+    voidLastTransaction : function(){
+        this.total -= this.lastTransactionAmount;
+        this.lastTransactionAmount = 0;
+    },
+    // Create a new method applyStaffDiscount here
+    applyStaffDiscount: function(employee) {
+        this.total = this.total - (this.total * employee.discountPercent / 100);
     }
+    
 };
 
-var playGame = function() {
-	userChoice = prompt("Do you choose rock, paper, scissors, or rope?");
-	while (userChoice !== "rock" && userChoice !== "paper" && userChoice !== "scissors"
-		&& userChoice !== "rope") {
-		userChoice = prompt("Incorrect choice. Please choose rock, paper, scissors, or rope.");	
-	}
-	computerChoice = Math.random();
-	if (computerChoice < 0.26) {
-		computerChoice = "rock";
-	} else if(computerChoice <= 0.50) {
-		computerChoice = "paper";
-	} else if (computerChoice <= 0.75) {
-		computerChoice = "scissors";
-	} else {
-		computerChoice = "rope";
-	} console.log("Computer: " + computerChoice);
-};
+cashRegister.scan('eggs',1);
+cashRegister.scan('milk',1);
+cashRegister.scan('magazine',3);
+// Apply your staff discount by passing the 'me' object 
+// to applyStaffDiscount
+cashRegister.applyStaffDiscount(me);
 
-var userChoice;
-var computerChoice;
-var result;
-playGame();
-result = compare(userChoice, computerChoice);
-console.log(result);
-while (result === "The result is a tie!") {
-	console.log("Let's play again!");
-	playGame();
-	result = compare(userChoice, computerChoice);
-	console.log(result);
-} 
-console.log("That was fun! Till next time!");
-
-
+// Show the total bill
+console.log('Your bill is '+cashRegister.total.toFixed(2));
